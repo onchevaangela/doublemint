@@ -69,26 +69,27 @@ ul{{margin:0;padding-left:18px;color:#d5ddd8}}li{{margin:4px 0}}
 </style></head><body><main>
 
 <header>
-{logo("horizontal-dark", h="72px")}
+{logo("horizontal-dark", h="96px")}
 <h1>Fresh look.<br><em>Clean finish.</em></h1>
 <p>Brand guidelines for Doublemint Detailing. The new identity drops the busy cartoon badge for one simple mark that reads at any size, on a business card, a shirt, a van door or an Instagram avatar.</p>
 </header>
 
 <section>
-<h2>01 · The mark</h2><h3>A tire and a leaf</h3>
+<h2>01 · The mark</h2><h3>Built for speed</h3>
 <div class="grid g2">
-<div class="tile dark">{logo("mark-dark", h="180px")}</div>
-<div><p>The mark is two shapes. The <b>ring</b> is a tire, so it says cars. The <b>leaf</b> is the mint in Doublemint and stands for fresh and clean.</p>
-<p>It is kept simple on purpose. It has no gradients, glow, bevels or clip-art, so it prints in one color, embroiders cleanly and can be cut from vinyl.</p></div>
+<div class="tile dark">{logo("stacked-dark", h="220px")}</div>
+<div><p>The mark is a <b>low sports coupe</b> with speed lines behind it, so anyone can see at a glance that this is car work. The <b>mint leaf</b> on the door is the team decal, and the lime hubs match it.</p>
+<p>The name is set in a heavy, forward-leaning italic over a racing stripe, the look of motorsport livery and car-show banners.</p>
+<p>It is still flat: no gradients, glow or bevels. That way it prints in one color, embroiders cleanly and can be cut from vinyl for the side of a truck.</p></div>
 </div>
 </section>
 
 <section>
 <h2>02 · Logo lockups</h2><h3>Use the right version</h3>
 <div class="grid g2">
-<div><div class="tile dark">{logo("horizontal-dark", w="100%")}</div><div class="cap">Primary · horizontal on dark</div></div>
+<div><div class="tile dark">{logo("horizontal-dark", w="100%")}</div><div class="cap">Horizontal on dark · website header, banners, van side</div></div>
 <div><div class="tile light">{logo("horizontal-light", w="100%")}</div><div class="cap">Horizontal on light</div></div>
-<div><div class="tile dark">{logo("stacked-dark", h="170px")}</div><div class="cap">Stacked · square spaces, shirts, signage</div></div>
+<div><div class="tile dark">{logo("stacked-dark", h="170px")}</div><div class="cap"><b style="color:#fff">Primary</b> · stacked: shirts, flyers, signs, price sheets</div></div>
 <div><div class="tile light">{logo("stacked-light", h="170px")}</div><div class="cap">Stacked on light</div></div>
 <div><div class="tile ever">{logo("horizontal-white", w="100%")}</div><div class="cap">One-color white · photos, green, vinyl</div></div>
 <div><div class="tile lime">{logo("horizontal-black", w="100%")}</div><div class="cap">One-color black · stamps, receipts, lime</div></div>
@@ -97,8 +98,8 @@ ul{{margin:0;padding-left:18px;color:#d5ddd8}}li{{margin:4px 0}}
 <div><div class="tile panel">{logo("app-icon", h="140px")}</div><div class="cap">App / social avatar</div></div>
 <div class="tile panel" style="flex-direction:column;align-items:flex-start;justify-content:center">
 <div class="spec"><b style="color:#fff">Clear space</b><br>Leave empty space around the logo at least the height of the “D” in DOUBLEMINT.</div>
-<div class="spec" style="margin-top:14px"><b style="color:#fff">Minimum size</b><br>Horizontal: 120&nbsp;px / 1.25&nbsp;in wide.<br>Mark alone: 24&nbsp;px / 0.3&nbsp;in.</div></div>
-<div class="tile dark"><div class="clear">{logo("mark-dark", h="90px")}</div></div>
+<div class="spec" style="margin-top:14px"><b style="color:#fff">Minimum size</b><br>Stacked: 140&nbsp;px / 1.5&nbsp;in wide.<br>Car alone: 48&nbsp;px / 0.5&nbsp;in wide.</div></div>
+<div class="tile dark"><div class="clear">{logo("mark-dark", h="60px")}</div></div>
 </div>
 </section>
 
@@ -109,16 +110,16 @@ ul{{margin:0;padding-left:18px;color:#d5ddd8}}li{{margin:4px 0}}
 </section>
 
 <section>
-<h2>04 · Typography</h2><h3>Inter, used two ways</h3>
+<h2>04 · Typography</h2><h3>Heavy italic, clean body</h3>
 <div class="grid g2">
 <div class="tile panel" style="flex-direction:column;align-items:flex-start">
-<div class="type-xl">DETAILING</div><div class="cap">Inter Display Black · headlines, prices, logo</div></div>
+<div class="type-xl" style="font-style:italic;transform:skewX(-8deg)">DETAILING</div><div class="cap">Inter Display Black Italic · headlines, prices, logo</div></div>
 <div class="tile panel" style="flex-direction:column;align-items:flex-start">
 <div class="spaced">Professional Services</div>
 <p style="margin:14px 0 0">Inter Regular / Medium for body text, service lists and contact details. It is free on Google Fonts and works in Canva.</p>
 <div class="cap">Inter SemiBold, +0.4em tracking · labels, taglines</div></div>
 </div>
-<p class="muted" style="margin-top:20px">Stick to these two styles. Leave out script fonts, italic sports fonts, 3D text and outlines.</p>
+<p class="muted" style="margin-top:20px">Stick to these two styles. Leave out script fonts, 3D text, chrome effects and outlines.</p>
 </section>
 
 <section>
@@ -141,8 +142,8 @@ ul{{margin:0;padding-left:18px;color:#d5ddd8}}li{{margin:4px 0}}
 <li>Scale it proportionally</li></ul></div>
 <div class="dont"><h4>Don’t</h4><ul>
 <li>Add glow, gradients, shadows, bevels or outlines</li>
-<li>Add cars, sprayers, bubbles or sparkles to it</li>
-<li>Stretch it, rotate it or recolor the leaves</li>
+<li>Add bubbles, sprayers, sparkles or a second car</li>
+<li>Stretch it, flip the car or recolor the decal</li>
 <li>Put the color logo on a busy photo</li></ul></div>
 </div>
 </section>
@@ -152,7 +153,7 @@ ul{{margin:0;padding-left:18px;color:#d5ddd8}}li{{margin:4px 0}}
 <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(min(420px,100%),1fr))">
 <div class="card" style="background:#0E1210;border:1px solid var(--line)">{logo("horizontal-dark", h="44px")}
 <div><div class="n">Exterior · Interior · Full Detail</div><div class="ph" style="margin-top:8px">862 238 0550 <span class="muted">·</span> 219 786 9863</div><div class="r">Appointments recommended · walk-ins welcome</div></div></div>
-<div class="card" style="background:#A3E05A;color:#0E1210">{logo("mark-black", h="44px")}
+<div class="card" style="background:#A3E05A;color:#0E1210">{logo("mark-black", h="40px")}
 <div><div class="n" style="font-size:22px;font-weight:900">Fresh look.<br>Clean finish.</div><div class="r" style="color:#0E1210;opacity:.7;margin-top:6px">Doublemint Detailing</div></div></div>
 <div class="ig">{logo("stacked-dark", h="90px")}
 <div class="price"><span class="h">Package</span><span class="h">Car</span><span class="h">SUV</span><span class="h">Truck</span>

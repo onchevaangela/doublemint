@@ -6,10 +6,10 @@ Open **`brand-guide.html`** in a browser for the full guidelines (logo, color, t
 
 | File | Use it for |
 |---|---|
-| `logo/*/doublemint-horizontal-dark` | **Primary.** Website header, flyers, anything on black |
+| `logo/*/doublemint-stacked-*` | **Primary.** Car over the name: shirts, flyers, signs, price sheets |
+| `logo/*/doublemint-horizontal-dark` | Wide spaces on black: website header, banners, van side |
 | `logo/*/doublemint-horizontal-light` | White/light paper, invoices, letterhead |
-| `logo/*/doublemint-stacked-*` | Square spaces: shirts, signs, the top of a price sheet |
-| `logo/*/doublemint-mark-*` | Icon only: stickers, embroidery, watermark |
+| `logo/*/doublemint-mark-*` | Car only: stickers, windshield decals, watermark |
 | `logo/*/doublemint-*-white` / `-black` | One color: vinyl decals, stamps, over photos |
 | `logo/*/doublemint-app-icon` | Instagram / Facebook / Google profile picture |
 
@@ -30,7 +30,7 @@ Open **`brand-guide.html`** in a browser for the full guidelines (logo, color, t
 ## Type
 
 [Inter](https://fonts.google.com/specimen/Inter), free on Google Fonts and Canva.
-Inter Display Black for headlines and prices, Inter Regular/Medium for body, Inter SemiBold with wide tracking for labels.
+Inter Display Black Italic for headlines and prices, Inter Regular/Medium for body, Inter SemiBold with wide tracking for labels.
 
 ## Regenerating
 

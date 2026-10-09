@@ -8,66 +8,75 @@ import os
 from fontTools.ttLib import TTFont
 from fontTools.pens.svgPathPen import SVGPathPen
 from fontTools.pens.transformPen import TransformPen
-from fontTools.pens.boundsPen import BoundsPen
 
 FONT_DIR = os.environ.get("INTER_DIR", "/usr/share/fonts/opentype/inter")
-DISPLAY_BLACK = f"{FONT_DIR}/InterDisplay-Black.otf"
-TEXT_SEMIBOLD = f"{FONT_DIR}/Inter-SemiBold.otf"
+BLACK_ITALIC = f"{FONT_DIR}/InterDisplay-BlackItalic.otf"
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "logo", "svg")
 
 # Brand palette
 SPEARMINT = "#A3E05A"   # primary accent
-PEPPERMINT = "#4CAF50"  # second leaf on dark
-EVERGREEN = "#2F7D4F"   # deep green, accent on light
-LIME_LEAF = "#7CC23A"   # first leaf on light
+EVERGREEN = "#2F7D4F"   # accent on light
 GLOSS = "#0E1210"       # near-black
-STEEL = "#9AA59E"
-SLATE = "#5B655F"
 WHITE = "#FFFFFF"
 
 THEMES = {
-    # name: (leaf1, leaf2, sparkle, word1, word2, tagline)
-    "dark": (SPEARMINT, PEPPERMINT, SPEARMINT, WHITE, SPEARMINT, STEEL),
-    "light": (LIME_LEAF, EVERGREEN, EVERGREEN, GLOSS, EVERGREEN, SLATE),
-    "white": (WHITE,) * 6,
-    "black": (GLOSS,) * 6,
+    # name: car body, accent (hubs, decal, speed lines), DOUBLE, MINT, bar
+    "dark": dict(body=WHITE, accent=SPEARMINT, w1=WHITE, w2=SPEARMINT, bar=SPEARMINT),
+    "light": dict(body=GLOSS, accent=EVERGREEN, w1=GLOSS, w2=EVERGREEN, bar=EVERGREEN),
+    "white": dict(body=WHITE, accent=WHITE, w1=WHITE, w2=WHITE, bar=WHITE),
+    "black": dict(body=GLOSS, accent=GLOSS, w1=GLOSS, w2=GLOSS, bar=GLOSS),
 }
+SKEW = -8   # extra forward lean on the type, degrees
 
 # ---------------------------------------------------------------- mark
-# Deliberately minimal: a tire (ring) with one mint leaf inside.
-CX = CY = 50
-R_OUT, R_IN = 46, 37      # tire ring
-L, W = 56, 34             # leaf length, width
-TILT = 40                 # leaf angle, degrees clockwise from vertical
+# A low sports coupe, side view, driving right, with speed lines behind it
+# and a mint-leaf decal on the door.
+BODY = ("M8,46 L6,37 L9,31 L13,28 L30,27.5 "
+        "C46,26 58,20 70,13.5 C84,7 100,6 113,9.5 "
+        "C123,14.5 131,19 141,24.5 "
+        "C160,27 178,29.5 190,32.5 C196,34.5 198.5,39 197.5,43.5 L195,47 "
+        "L172,47 A16,16 0 0 0 140,47 L60,47 A16,16 0 0 0 28,47 Z")
+WINDOW = "M58,28.5 C73,17 90,11.5 106,12 C117,12.5 126,17.5 135,25.8 Z"
+WHEELS = (44, 156)
+WHEEL_Y = 47
+SPEED = ((-30, 20, -1), (-22, 28, -5), (-36, 36, -9))   # x1, y, x2
+MARK_BOX = (-37.6, 6.5, 237, 54.5)   # x, y, w, h of the visible bounds
 
 
-def _leaf():
-    """Leaf centred on the origin, tip pointing up."""
-    h = L / 2
-    return (f"M0,{h} C{0.62*W:.2f},{h - 0.22*L:.2f} {0.40*W:.2f},{-h + 0.20*L:.2f} 0,{-h} "
-            f"C{-0.40*W:.2f},{-h + 0.20*L:.2f} {-0.62*W:.2f},{h - 0.22*L:.2f} 0,{h}Z")
+def _leaf(cx, cy, length, width, ang):
+    h = length / 2
+    return (f'<path transform="translate({cx} {cy}) rotate({ang})" d="M0,{h} '
+            f'C{0.62*width:.2f},{h-0.22*length:.2f} {0.40*width:.2f},{-h+0.20*length:.2f} 0,{-h} '
+            f'C{-0.40*width:.2f},{-h+0.20*length:.2f} {-0.62*width:.2f},{h-0.22*length:.2f} 0,{h}Z"/>')
 
 
-def _ring():
+DECAL = (100, 36.5, 15, 8.5, 62)   # door leaf: cx, cy, length, width, angle
+
+
+def _ring(cx, cy, r1, r2):
     def circ(r):
-        return f"M{CX - r},{CY} a{r},{r} 0 1,0 {2*r},0 a{r},{r} 0 1,0 {-2*r},0Z"
-    return circ(R_OUT) + circ(R_IN)
-
-
-MARK_BOX = (4, 4, 92, 92)  # x, y, w, h of the mark's visible bounds
+        return f"M{cx - r},{cy} a{r},{r} 0 1,0 {2*r},0 a{r},{r} 0 1,0 {-2*r},0Z"
+    return circ(r1) + circ(r2)
 
 
 def mark(theme, uid, x=0, y=0, scale=1.0):
-    """Tire ring with a single leaf; the leaf's vein is cut out."""
-    c1, c2 = THEMES[theme][:2]
-    t = f"translate({CX} {CY}) rotate({TILT})"
+    """Sports car with speed lines. Every gap is a mask, so it works on any background."""
+    body, accent = THEMES[theme]["body"], THEMES[theme]["accent"]
+    cx, cy, ln, wd, ang = DECAL
+    halo = _leaf(cx, cy, ln + 4.5, wd + 4, ang).replace("/>", ' fill="#000"/>')
+    arches = "".join(f'<circle cx="{wx}" cy="{WHEEL_Y}" r="16" fill="#000"/>' for wx in WHEELS)
+    tires = "".join(f'<path d="{_ring(wx, WHEEL_Y, 13.5, 9)}" fill-rule="evenodd"/>' for wx in WHEELS)
+    hubs = "".join(f'<circle cx="{wx}" cy="{WHEEL_Y}" r="6.5"/>' for wx in WHEELS)
+    lines = "".join(f'<path d="M{x1},{ly} L{x2},{ly}"/>' for x1, ly, x2 in SPEED)
     return f'''<g transform="translate({x} {y}) scale({scale}) translate({-MARK_BOX[0]} {-MARK_BOX[1]})">
-<mask id="{uid}" maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100">
-<rect width="100" height="100" fill="#fff"/>
-<path d="M0,{L*0.36:.2f} L0,{-L*0.30:.2f}" transform="{t}" stroke="#000" stroke-width="2.8" stroke-linecap="round"/>
+<mask id="{uid}" maskUnits="userSpaceOnUse" x="-30" y="0" width="240" height="70">
+<rect x="-30" width="240" height="70" fill="#fff"/>
+<path d="{WINDOW}" fill="#000"/>{arches}{halo}
 </mask>
-<path d="{_ring()}" fill-rule="evenodd" fill="{c2}"/>
-<g mask="url(#{uid})"><path d="{_leaf()}" transform="{t}" fill="{c1}"/></g>
+<path d="{BODY}" fill="{body}" mask="url(#{uid})"/>
+<g fill="{body}">{tires}</g>
+<g fill="{accent}">{hubs}{_leaf(cx, cy, ln, wd, ang)}</g>
+<g stroke="{accent}" stroke-width="3.2" stroke-linecap="round">{lines}</g>
 </g>'''
 
 # ---------------------------------------------------------------- type
@@ -92,25 +101,33 @@ def cap_height(font, size):
     return f["OS/2"].sCapHeight * size / f["head"].unitsPerEm
 
 
-def wordmark(theme, x, y, word_size):
-    """DOUBLE|MINT over spaced DETAILING. (x, y) = top-left of caps."""
-    _, _, _, w1, w2, tag = THEMES[theme]
-    tr = 0.01
-    cap = cap_height(DISPLAY_BLACK, word_size)
-    base = y + cap
-    d1, wd1 = text("DOUBLE", DISPLAY_BLACK, word_size, x, base, tr)
-    d2, wd2 = text("MINT", DISPLAY_BLACK, word_size, x + wd1 + tr * word_size, base, tr)
-    total = wd1 + tr * word_size + wd2
-    # tagline: fit DETAILING to the wordmark width via tracking
-    tsize = word_size * 0.34
-    _, raw = text("DETAILING", TEXT_SEMIBOLD, tsize, 0, 0, 0)
-    ttrack = (total - raw) / (8 * tsize)
-    tcap = cap_height(TEXT_SEMIBOLD, tsize)
-    tbase = base + word_size * 0.30 + tcap
-    d3, _ = text("DETAILING", TEXT_SEMIBOLD, tsize, x, tbase, ttrack)
-    svg = (f'<path d="{d1}" fill="{w1}"/><path d="{d2}" fill="{w2}"/>'
-           f'<path d="{d3}" fill="{tag}"/>')
-    return svg, total, tbase - y
+def wordmark(theme, uid, x, y, size):
+    """Slanted DOUBLEMINT over a racing-stripe bar with DETAILING cut out of it.
+    (x, y) = top-left of the caps. Returns (svg, width, height)."""
+    t = THEMES[theme]
+    tr = -0.005
+    cap = cap_height(BLACK_ITALIC, size)
+    d1, wd1 = text("DOUBLE", BLACK_ITALIC, size, 0, cap, tr)
+    d2, wd2 = text("MINT", BLACK_ITALIC, size, wd1 + tr * size, cap, tr)
+    total = wd1 + tr * size + wd2
+    # bar
+    by, bh = cap + size * 0.16, size * 0.42
+    lean = bh * 0.35
+    bar = f"M{lean},{by} L{total + lean * 0.4},{by} L{total - lean * 0.6},{by + bh} L{-lean},{by + bh}Z"
+    tsize = bh * 0.62
+    _, raw = text("DETAILING", BLACK_ITALIC, tsize, 0, 0, 0)
+    track = 0.32
+    tw = raw + 8 * track * tsize
+    tcap = cap_height(BLACK_ITALIC, tsize)
+    d3, _ = text("DETAILING", BLACK_ITALIC, tsize, (total - tw) / 2, by + (bh + tcap) / 2, track)
+    h = by + bh
+    svg = f'''<g transform="translate({x} {y}) skewX({SKEW}) translate({h * 0.07} 0)">
+<mask id="{uid}" maskUnits="userSpaceOnUse" x="{-size}" y="{-size}" width="{total + 2 * size}" height="{h + 2 * size}">
+<rect x="{-size}" y="{-size}" width="{total + 2 * size}" height="{h + 2 * size}" fill="#fff"/><path d="{d3}" fill="#000"/></mask>
+<path d="{d1}" fill="{t["w1"]}"/><path d="{d2}" fill="{t["w2"]}"/>
+<path d="{bar}" fill="{t["bar"]}" mask="url(#{uid})"/>
+</g>'''
+    return svg, total, h
 
 
 def write(name, w, h, body, bg=None):
@@ -124,41 +141,42 @@ def write(name, w, h, body, bg=None):
 
 def build():
     os.makedirs(OUT, exist_ok=True)
-    pad = 24
+    pad = 28
+    ws = 64
     for theme in THEMES:
-        # horizontal lockup: mark height == wordmark block height
-        ws = 64
-        wm, ww, wh = wordmark(theme, 0, 0, ws)
-        ms = wh / MARK_BOX[3] * 1.22
-        mw, mh = MARK_BOX[2] * ms, MARK_BOX[3] * ms
-        gap = mw * 0.30
-        tx = pad + mw + gap
-        ty = pad + (mh - wh) / 2
-        wm, _, _ = wordmark(theme, tx, ty, ws)
-        write(f"doublemint-horizontal-{theme}.svg", tx + ww + pad, mh + 2 * pad,
-              mark(theme, f"m-h-{theme}", pad, pad, ms) + wm)
+        _, ww, wh = wordmark(theme, "x", 0, 0, ws)
 
-        # stacked lockup
-        ws = 64
-        _, ww, wh = wordmark(theme, 0, 0, ws)
-        ms = ww * 0.36 / MARK_BOX[2]
+        # stacked (primary): car over the wordmark
+        ms = ww * 0.92 / MARK_BOX[2]
         mw, mh = MARK_BOX[2] * ms, MARK_BOX[3] * ms
         W_ = ww + 2 * pad
-        wm, _, _ = wordmark(theme, pad, pad + mh + ws * 0.42, ws)
-        write(f"doublemint-stacked-{theme}.svg", W_, pad + mh + ws * 0.42 + wh + pad,
-              mark(theme, f"m-s-{theme}", (W_ - mw) / 2, pad, ms) + wm)
+        gap = ws * 0.30
+        wm, _, _ = wordmark(theme, f"w-s-{theme}", pad, pad + mh + gap, ws)
+        write(f"doublemint-stacked-{theme}.svg", W_, pad + mh + gap + wh + pad,
+              mark(theme, f"m-s-{theme}", (W_ - mw) / 2 + ww * 0.02, pad, ms) + wm)
 
-        # mark only
-        ms = 3.2
+        # horizontal: car left, wordmark right
+        ms = wh * 1.05 / MARK_BOX[3]
+        mw, mh = MARK_BOX[2] * ms, MARK_BOX[3] * ms
+        tx = pad + mw + ws * 0.45
+        H = max(mh, wh) + 2 * pad
+        wm, _, _ = wordmark(theme, f"w-h-{theme}", tx, (H - wh) / 2, ws)
+        write(f"doublemint-horizontal-{theme}.svg", tx + ww + pad + ws * 0.1, H,
+              mark(theme, f"m-h-{theme}", pad, (H - mh) / 2, ms) + wm)
+
+        # car only
+        ms = 3
         write(f"doublemint-mark-{theme}.svg", MARK_BOX[2] * ms + 2 * pad, MARK_BOX[3] * ms + 2 * pad,
               mark(theme, f"m-m-{theme}", pad, pad, ms))
 
-    # app / social icon: mark on gloss black rounded square
+    # app / social icon: car on gloss black rounded square
     S = 512
-    ms = S * 0.66 / MARK_BOX[2]
+    ms = S * 0.94 / MARK_BOX[2]
     mw, mh = MARK_BOX[2] * ms, MARK_BOX[3] * ms
+    stripe = (f'<path d="M{S*0.20},{S*0.645} L{S*0.92},{S*0.645} L{S*0.885},{S*0.69} '
+              f'L{S*0.165},{S*0.69}Z" fill="{SPEARMINT}"/>')
     body = (f'<rect width="{S}" height="{S}" rx="112" fill="{GLOSS}"/>'
-            + mark("dark", "m-icon", (S - mw) / 2, (S - mh) / 2, ms))
+            + mark("dark", "m-icon", (S - mw) / 2 - S * 0.01, S * 0.605 - mh, ms) + stripe)
     write("doublemint-app-icon.svg", S, S, body)
 
 

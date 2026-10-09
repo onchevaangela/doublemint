@@ -1,8 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 342.4 342.4" width="342" height="342"><title>Doublemint Detailing</title><g transform="translate(24 24) scale(3.2) translate(-4 -4)">
-<mask id="m-m-light" maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100">
-<rect width="100" height="100" fill="#fff"/>
-<path d="M0,20.16 L0,-16.80" transform="translate(50 50) rotate(40)" stroke="#000" stroke-width="2.8" stroke-linecap="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 767.0 219.5" width="767" height="220"><title>Doublemint Detailing</title><g transform="translate(28 28) scale(3) translate(37.6 -6.5)">
+<mask id="m-m-light" maskUnits="userSpaceOnUse" x="-30" y="0" width="240" height="70">
+<rect x="-30" width="240" height="70" fill="#fff"/>
+<path d="M58,28.5 C73,17 90,11.5 106,12 C117,12.5 126,17.5 135,25.8 Z" fill="#000"/><circle cx="44" cy="47" r="16" fill="#000"/><circle cx="156" cy="47" r="16" fill="#000"/><path transform="translate(100 36.5) rotate(62)" d="M0,9.75 C7.75,5.46 5.00,-5.85 0,-9.75 C-5.00,-5.85 -7.75,5.46 0,9.75Z" fill="#000"/>
 </mask>
-<path d="M4,50 a46,46 0 1,0 92,0 a46,46 0 1,0 -92,0ZM13,50 a37,37 0 1,0 74,0 a37,37 0 1,0 -74,0Z" fill-rule="evenodd" fill="#2F7D4F"/>
-<g mask="url(#m-m-light)"><path d="M0,28.0 C21.08,15.68 13.60,-16.80 0,-28.0 C-13.60,-16.80 -21.08,15.68 0,28.0Z" transform="translate(50 50) rotate(40)" fill="#7CC23A"/></g>
+<path d="M8,46 L6,37 L9,31 L13,28 L30,27.5 C46,26 58,20 70,13.5 C84,7 100,6 113,9.5 C123,14.5 131,19 141,24.5 C160,27 178,29.5 190,32.5 C196,34.5 198.5,39 197.5,43.5 L195,47 L172,47 A16,16 0 0 0 140,47 L60,47 A16,16 0 0 0 28,47 Z" fill="#0E1210" mask="url(#m-m-light)"/>
+<g fill="#0E1210"><path d="M30.5,47 a13.5,13.5 0 1,0 27.0,0 a13.5,13.5 0 1,0 -27.0,0ZM35,47 a9,9 0 1,0 18,0 a9,9 0 1,0 -18,0Z" fill-rule="evenodd"/><path d="M142.5,47 a13.5,13.5 0 1,0 27.0,0 a13.5,13.5 0 1,0 -27.0,0ZM147,47 a9,9 0 1,0 18,0 a9,9 0 1,0 -18,0Z" fill-rule="evenodd"/></g>
+<g fill="#2F7D4F"><circle cx="44" cy="47" r="6.5"/><circle cx="156" cy="47" r="6.5"/><path transform="translate(100 36.5) rotate(62)" d="M0,7.5 C5.27,4.20 3.40,-4.50 0,-7.5 C-3.40,-4.50 -5.27,4.20 0,7.5Z"/></g>
+<g stroke="#2F7D4F" stroke-width="3.2" stroke-linecap="round"><path d="M-30,20 L-1,20"/><path d="M-22,28 L-5,28"/><path d="M-36,36 L-9,36"/></g>
 </g></svg>
