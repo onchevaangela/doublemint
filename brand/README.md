@@ -9,7 +9,7 @@ Open **`brand-guide.html`** in a browser for the full guidelines (logo, color, t
 | `logo/*/doublemint-horizontal-dark` | **Primary.** Website header, flyers, anything on black |
 | `logo/*/doublemint-horizontal-light` | White/light paper, invoices, letterhead |
 | `logo/*/doublemint-stacked-*` | Square spaces: shirts, signs, the top of a price sheet |
-| `logo/*/doublemint-mark-*` | Icon only: stickers, embroidery, watermark |
+| `logo/*/doublemint-mark-*` | Wheel icon only: stickers, embroidery, wheel-center decals, watermark |
 | `logo/*/doublemint-*-white` / `-black` | One color: vinyl decals, stamps, over photos |
 | `logo/*/doublemint-app-icon` | Instagram / Facebook / Google profile picture |
 

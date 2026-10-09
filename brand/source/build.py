@@ -34,18 +34,22 @@ THEMES = {
 }
 
 # ---------------------------------------------------------------- mark
-L, W, ANG, GAP = 78, 38, 24, 3.2   # leaf length, width, tilt, base gap
-BX, BY = 50, 92                    # shared base point of both leaves
+# A wheel: tire, rim lip, five mint-leaf spokes, hub, and a sparkle glinting on the tire.
+CX = CY = 50
+R_OUT, R_IN = 46, 35          # tire ring
+HUB = 8                         # hub radius
+SPOKES = 5
+L, W = 28.5, 17                 # leaf spoke length, width
+SP_X, SP_Y, SP_R = 83.5, 16.5, 11.5   # sparkle on the rim (upper right)
 
 
 def _leaf():
-    return (f"M0,0 C{0.46*W:.2f},{-0.22*L:.2f} {0.22*W:.2f},{-0.74*L:.2f} 0,{-L:.2f} "
-            f"C{-0.34*W:.2f},{-0.74*L:.2f} {-0.72*W:.2f},{-0.18*L:.2f} 0,0Z")
+    return (f"M0,0 C{0.62*W:.2f},{-0.16*L:.2f} {0.42*W:.2f},{-0.70*L:.2f} 0,{-L:.2f} "
+            f"C{-0.42*W:.2f},{-0.70*L:.2f} {-0.62*W:.2f},{-0.16*L:.2f} 0,0Z")
 
 
 def _rib():
-    return (f"M{-0.02*W:.2f},{-0.10*L:.2f} C{-0.10*W:.2f},{-0.40*L:.2f} "
-            f"{-0.08*W:.2f},{-0.62*L:.2f} {-0.04*W:.2f},{-0.84*L:.2f}")
+    return f"M0,{-0.16*L:.2f} L0,{-0.74*L:.2f}"
 
 
 def _sparkle(cx, cy, r):
@@ -56,26 +60,38 @@ def _sparkle(cx, cy, r):
             f"C{cx-k},{cy-k} {cx-k},{cy-k} {cx},{cy-r}Z")
 
 
-LEFT = f"translate({BX - GAP} {BY}) rotate({-ANG})"
-RIGHT = f"translate({BX + GAP} {BY}) scale(-1 1) rotate({-ANG})"
-MARK_BOX = (13, 20, 74, 73)  # x, y, w, h of the mark's visible bounds
+def _ring():
+    def circ(r):
+        return (f"M{CX - r},{CY} a{r},{r} 0 1,0 {2*r},0 a{r},{r} 0 1,0 {-2*r},0Z")
+    return circ(R_OUT) + circ(R_IN)
+
+
+def _spoke(i):
+    return f"translate({CX} {CY}) rotate({i * 360 / SPOKES}) translate(0 {-(HUB + 1.8)})"
+
+
+MARK_BOX = (3.5, 3.5, 93, 93)  # x, y, w, h of the mark's visible bounds
 
 
 def mark(theme, uid, x=0, y=0, scale=1.0):
-    """Two mint leaves with a detailing sparkle between them."""
+    """Wheel with mint-leaf spokes and a rim sparkle."""
     c1, c2, sp = THEMES[theme][:3]
-    rib = _rib()
+    leaf, rib = _leaf(), _rib()
+    ribs = "".join(f'<path d="{rib}" transform="{_spoke(i)}" fill="none" stroke="#000" '
+                   f'stroke-width="1.7" stroke-linecap="round"/>' for i in range(SPOKES))
+    leaves = "".join(f'<path d="{leaf}" transform="{_spoke(i)}"/>' for i in range(SPOKES))
     return f'''<g transform="translate({x} {y}) scale({scale}) translate({-MARK_BOX[0]} {-MARK_BOX[1]})">
 <mask id="{uid}" maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100">
-<rect width="100" height="100" fill="#fff"/>
-<path d="{rib}" transform="{LEFT}" fill="none" stroke="#000" stroke-width="2.4" stroke-linecap="round"/>
-<path d="{rib}" transform="{RIGHT}" fill="none" stroke="#000" stroke-width="2.4" stroke-linecap="round"/>
+<rect width="100" height="100" fill="#fff"/>{ribs}
+<path d="{_sparkle(SP_X, SP_Y, SP_R + 3.2)}" fill="#000"/>
+<circle cx="{CX}" cy="{CY}" r="2.6" fill="#000"/>
 </mask>
 <g mask="url(#{uid})">
-<path d="{_leaf()}" transform="{LEFT}" fill="{c1}"/>
-<path d="{_leaf()}" transform="{RIGHT}" fill="{c2}"/>
+<path d="{_ring()}" fill-rule="evenodd" fill="{c2}"/>
+<circle cx="{CX}" cy="{CY}" r="{R_IN - 3.6}" fill="none" stroke="{c1}" stroke-width="1.8"/>
+<g fill="{c1}">{leaves}<circle cx="{CX}" cy="{CY}" r="{HUB}"/></g>
 </g>
-<path d="{_sparkle(50, 34, 8.5)}" fill="{sp}"/>
+<path d="{_sparkle(SP_X, SP_Y, SP_R)}" fill="{sp}"/>
 </g>'''
 
 # ---------------------------------------------------------------- type
@@ -137,7 +153,7 @@ def build():
         # horizontal lockup: mark height == wordmark block height
         ws = 64
         wm, ww, wh = wordmark(theme, 0, 0, ws)
-        ms = wh / MARK_BOX[3] * 1.12
+        ms = wh / MARK_BOX[3] * 1.22
         mw, mh = MARK_BOX[2] * ms, MARK_BOX[3] * ms
         gap = mw * 0.30
         tx = pad + mw + gap
@@ -149,7 +165,7 @@ def build():
         # stacked lockup
         ws = 64
         _, ww, wh = wordmark(theme, 0, 0, ws)
-        ms = ww * 0.42 / MARK_BOX[2]
+        ms = ww * 0.36 / MARK_BOX[2]
         mw, mh = MARK_BOX[2] * ms, MARK_BOX[3] * ms
         W_ = ww + 2 * pad
         wm, _, _ = wordmark(theme, pad, pad + mh + ws * 0.42, ws)
@@ -157,16 +173,16 @@ def build():
               mark(theme, f"m-s-{theme}", (W_ - mw) / 2, pad, ms) + wm)
 
         # mark only
-        ms = 4
+        ms = 3.2
         write(f"doublemint-mark-{theme}.svg", MARK_BOX[2] * ms + 2 * pad, MARK_BOX[3] * ms + 2 * pad,
               mark(theme, f"m-m-{theme}", pad, pad, ms))
 
     # app / social icon: mark on gloss black rounded square
     S = 512
-    ms = S * 0.62 / MARK_BOX[2]
+    ms = S * 0.66 / MARK_BOX[2]
     mw, mh = MARK_BOX[2] * ms, MARK_BOX[3] * ms
     body = (f'<rect width="{S}" height="{S}" rx="112" fill="{GLOSS}"/>'
-            + mark("dark", "m-icon", (S - mw) / 2, (S - mh) / 2 + 6, ms))
+            + mark("dark", "m-icon", (S - mw) / 2, (S - mh) / 2, ms))
     write("doublemint-app-icon.svg", S, S, body)
 
 
