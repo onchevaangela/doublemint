@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 344.0 340.0" width="344" height="340"><title>Doublemint Detailing</title><g transform="translate(24 24) scale(4) translate(-13 -20)">
+<mask id="m-m-dark" maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100">
+<rect width="100" height="100" fill="#fff"/>
+<path d="M-0.76,-7.80 C-3.80,-31.20 -3.04,-48.36 -1.52,-65.52" transform="translate(46.8 92) rotate(-24)" fill="none" stroke="#000" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M-0.76,-7.80 C-3.80,-31.20 -3.04,-48.36 -1.52,-65.52" transform="translate(53.2 92) scale(-1 1) rotate(-24)" fill="none" stroke="#000" stroke-width="2.4" stroke-linecap="round"/>
+</mask>
+<g mask="url(#m-m-dark)">
+<path d="M0,0 C17.48,-17.16 8.36,-57.72 0,-78.00 C-12.92,-57.72 -27.36,-14.04 0,0Z" transform="translate(46.8 92) rotate(-24)" fill="#A3E05A"/>
+<path d="M0,0 C17.48,-17.16 8.36,-57.72 0,-78.00 C-12.92,-57.72 -27.36,-14.04 0,0Z" transform="translate(53.2 92) scale(-1 1) rotate(-24)" fill="#4CAF50"/>
+</g>
+<path d="M50,25.5 C51.53,32.47 51.53,32.47 58.5,34 C51.53,35.53 51.53,35.53 50,42.5 C48.47,35.53 48.47,35.53 41.5,34 C48.47,32.47 48.47,32.47 50,25.5Z" fill="#A3E05A"/>
+</g></svg>
