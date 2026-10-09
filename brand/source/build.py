@@ -34,64 +34,40 @@ THEMES = {
 }
 
 # ---------------------------------------------------------------- mark
-# A wheel: tire, rim lip, five mint-leaf spokes, hub, and a sparkle glinting on the tire.
+# Deliberately minimal: a tire (ring) with one mint leaf inside.
 CX = CY = 50
-R_OUT, R_IN = 46, 35          # tire ring
-HUB = 8                         # hub radius
-SPOKES = 5
-L, W = 28.5, 17                 # leaf spoke length, width
-SP_X, SP_Y, SP_R = 83.5, 16.5, 11.5   # sparkle on the rim (upper right)
+R_OUT, R_IN = 46, 37      # tire ring
+L, W = 56, 34             # leaf length, width
+TILT = 40                 # leaf angle, degrees clockwise from vertical
 
 
 def _leaf():
-    return (f"M0,0 C{0.62*W:.2f},{-0.16*L:.2f} {0.42*W:.2f},{-0.70*L:.2f} 0,{-L:.2f} "
-            f"C{-0.42*W:.2f},{-0.70*L:.2f} {-0.62*W:.2f},{-0.16*L:.2f} 0,0Z")
-
-
-def _rib():
-    return f"M0,{-0.16*L:.2f} L0,{-0.74*L:.2f}"
-
-
-def _sparkle(cx, cy, r):
-    k = r * 0.18
-    return (f"M{cx},{cy-r} C{cx+k},{cy-k} {cx+k},{cy-k} {cx+r},{cy} "
-            f"C{cx+k},{cy+k} {cx+k},{cy+k} {cx},{cy+r} "
-            f"C{cx-k},{cy+k} {cx-k},{cy+k} {cx-r},{cy} "
-            f"C{cx-k},{cy-k} {cx-k},{cy-k} {cx},{cy-r}Z")
+    """Leaf centred on the origin, tip pointing up."""
+    h = L / 2
+    return (f"M0,{h} C{0.62*W:.2f},{h - 0.22*L:.2f} {0.40*W:.2f},{-h + 0.20*L:.2f} 0,{-h} "
+            f"C{-0.40*W:.2f},{-h + 0.20*L:.2f} {-0.62*W:.2f},{h - 0.22*L:.2f} 0,{h}Z")
 
 
 def _ring():
     def circ(r):
-        return (f"M{CX - r},{CY} a{r},{r} 0 1,0 {2*r},0 a{r},{r} 0 1,0 {-2*r},0Z")
+        return f"M{CX - r},{CY} a{r},{r} 0 1,0 {2*r},0 a{r},{r} 0 1,0 {-2*r},0Z"
     return circ(R_OUT) + circ(R_IN)
 
 
-def _spoke(i):
-    return f"translate({CX} {CY}) rotate({i * 360 / SPOKES}) translate(0 {-(HUB + 1.8)})"
-
-
-MARK_BOX = (3.5, 3.5, 93, 93)  # x, y, w, h of the mark's visible bounds
+MARK_BOX = (4, 4, 92, 92)  # x, y, w, h of the mark's visible bounds
 
 
 def mark(theme, uid, x=0, y=0, scale=1.0):
-    """Wheel with mint-leaf spokes and a rim sparkle."""
-    c1, c2, sp = THEMES[theme][:3]
-    leaf, rib = _leaf(), _rib()
-    ribs = "".join(f'<path d="{rib}" transform="{_spoke(i)}" fill="none" stroke="#000" '
-                   f'stroke-width="1.7" stroke-linecap="round"/>' for i in range(SPOKES))
-    leaves = "".join(f'<path d="{leaf}" transform="{_spoke(i)}"/>' for i in range(SPOKES))
+    """Tire ring with a single leaf; the leaf's vein is cut out."""
+    c1, c2 = THEMES[theme][:2]
+    t = f"translate({CX} {CY}) rotate({TILT})"
     return f'''<g transform="translate({x} {y}) scale({scale}) translate({-MARK_BOX[0]} {-MARK_BOX[1]})">
 <mask id="{uid}" maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100">
-<rect width="100" height="100" fill="#fff"/>{ribs}
-<path d="{_sparkle(SP_X, SP_Y, SP_R + 3.2)}" fill="#000"/>
-<circle cx="{CX}" cy="{CY}" r="2.6" fill="#000"/>
+<rect width="100" height="100" fill="#fff"/>
+<path d="M0,{L*0.36:.2f} L0,{-L*0.30:.2f}" transform="{t}" stroke="#000" stroke-width="2.8" stroke-linecap="round"/>
 </mask>
-<g mask="url(#{uid})">
 <path d="{_ring()}" fill-rule="evenodd" fill="{c2}"/>
-<circle cx="{CX}" cy="{CY}" r="{R_IN - 3.6}" fill="none" stroke="{c1}" stroke-width="1.8"/>
-<g fill="{c1}">{leaves}<circle cx="{CX}" cy="{CY}" r="{HUB}"/></g>
-</g>
-<path d="{_sparkle(SP_X, SP_Y, SP_R)}" fill="{sp}"/>
+<g mask="url(#{uid})"><path d="{_leaf()}" transform="{t}" fill="{c1}"/></g>
 </g>'''
 
 # ---------------------------------------------------------------- type

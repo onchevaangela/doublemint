@@ -75,12 +75,11 @@ ul{{margin:0;padding-left:18px;color:#d5ddd8}}li{{margin:4px 0}}
 </header>
 
 <section>
-<h2>01 · The mark</h2><h3>A wheel made of mint</h3>
+<h2>01 · The mark</h2><h3>A tire and a leaf</h3>
 <div class="grid g2">
 <div class="tile dark">{logo("mark-dark", h="180px")}</div>
-<div><p>The mark is a <b>wheel</b>, the one shape everyone links to cars. The tire, rim and hub are drawn like a five-spoke alloy, and every spoke is a <b>mint leaf</b>. The sparkle on the tire is the shine you get after a detail.</p>
-<p>The tire and the leaves are two different greens: <b>double</b> mint, inside and out.</p>
-<p>The shape is flat and symmetrical on purpose. It has no gradients, glow, bevels or clip-art, so it prints in one color, embroiders cleanly and can be cut from vinyl.</p></div>
+<div><p>The mark is two shapes. The <b>ring</b> is a tire, so it says cars. The <b>leaf</b> is the mint in Doublemint and stands for fresh and clean.</p>
+<p>It is kept simple on purpose. It has no gradients, glow, bevels or clip-art, so it prints in one color, embroiders cleanly and can be cut from vinyl.</p></div>
 </div>
 </section>
 
@@ -142,7 +141,7 @@ ul{{margin:0;padding-left:18px;color:#d5ddd8}}li{{margin:4px 0}}
 <li>Scale it proportionally</li></ul></div>
 <div class="dont"><h4>Don’t</h4><ul>
 <li>Add glow, gradients, shadows, bevels or outlines</li>
-<li>Add cars, sprayers or bubbles around the wheel</li>
+<li>Add cars, sprayers, bubbles or sparkles to it</li>
 <li>Stretch it, rotate it or recolor the leaves</li>
 <li>Put the color logo on a busy photo</li></ul></div>
 </div>
