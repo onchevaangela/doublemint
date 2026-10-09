@@ -6,14 +6,18 @@ Open **`brand-guide.html`** in a browser for the full guidelines (logo, color, t
 
 | File | Use it for |
 |---|---|
-| `logo/*/doublemint-stacked-*` | **Primary.** Car over the name: shirts, flyers, signs, price sheets |
+| `logo/*/doublemint-stacked-*` | **Primary.** Wheel over the name: shirts, flyers, signs, price sheets |
 | `logo/*/doublemint-horizontal-dark` | Wide spaces on black: website header, banners, van side |
 | `logo/*/doublemint-horizontal-light` | White/light paper, invoices, letterhead |
-| `logo/*/doublemint-mark-*` | Car only: stickers, windshield decals, watermark |
+| `logo/*/doublemint-mark-*` | Wheel only: stickers, windshield decals, watermark |
 | `logo/*/doublemint-*-white` / `-black` | One color: vinyl decals, stamps, over photos |
 | `logo/*/doublemint-app-icon` | Instagram / Facebook / Google profile picture |
 
 `svg/` scales to any size (print, signs, vinyl). `png/` files are high-res with transparent backgrounds (Canva, social media).
+
+## Other mark options
+
+`logo/options/` has the same logo with a **windshield + wiper** or a **steering wheel** instead of the wheel (see `options-comparison.png`). To switch the main files to one of them: `DM_MARK=windshield python3 source/build.py` (or `steering`).
 
 ## Palette
 

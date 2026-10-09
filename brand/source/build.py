@@ -29,55 +29,18 @@ THEMES = {
 SKEW = -8   # extra forward lean on the type, degrees
 
 # ---------------------------------------------------------------- mark
-# A low sports coupe, side view, driving right, with speed lines behind it
-# and a mint-leaf decal on the door.
-BODY = ("M8,46 L6,37 L9,31 L13,28 L30,27.5 "
-        "C46,26 58,20 70,13.5 C84,7 100,6 113,9.5 "
-        "C123,14.5 131,19 141,24.5 "
-        "C160,27 178,29.5 190,32.5 C196,34.5 198.5,39 197.5,43.5 L195,47 "
-        "L172,47 A16,16 0 0 0 140,47 L60,47 A16,16 0 0 0 28,47 Z")
-WINDOW = "M58,28.5 C73,17 90,11.5 106,12 C117,12.5 126,17.5 135,25.8 Z"
-WHEELS = (44, 156)
-WHEEL_Y = 47
-SPEED = ((-30, 20, -1), (-22, 28, -5), (-36, 36, -9))   # x1, y, x2
-MARK_BOX = (-37.6, 6.5, 237, 54.5)   # x, y, w, h of the visible bounds
+# Marks live in marks.py. MARK picks the one used for the main logo files;
+# every option is also exported to ../logo/options/ for comparison.
+from marks import MARKS
+MARK = os.environ.get("DM_MARK", "wheel")
+MARK_BOX = (2, 2, 96, 96)
 
 
-def _leaf(cx, cy, length, width, ang):
-    h = length / 2
-    return (f'<path transform="translate({cx} {cy}) rotate({ang})" d="M0,{h} '
-            f'C{0.62*width:.2f},{h-0.22*length:.2f} {0.40*width:.2f},{-h+0.20*length:.2f} 0,{-h} '
-            f'C{-0.40*width:.2f},{-h+0.20*length:.2f} {-0.62*width:.2f},{h-0.22*length:.2f} 0,{h}Z"/>')
-
-
-DECAL = (100, 36.5, 15, 8.5, 62)   # door leaf: cx, cy, length, width, angle
-
-
-def _ring(cx, cy, r1, r2):
-    def circ(r):
-        return f"M{cx - r},{cy} a{r},{r} 0 1,0 {2*r},0 a{r},{r} 0 1,0 {-2*r},0Z"
-    return circ(r1) + circ(r2)
-
-
-def mark(theme, uid, x=0, y=0, scale=1.0):
-    """Sports car with speed lines. Every gap is a mask, so it works on any background."""
-    body, accent = THEMES[theme]["body"], THEMES[theme]["accent"]
-    cx, cy, ln, wd, ang = DECAL
-    halo = _leaf(cx, cy, ln + 4.5, wd + 4, ang).replace("/>", ' fill="#000"/>')
-    arches = "".join(f'<circle cx="{wx}" cy="{WHEEL_Y}" r="16" fill="#000"/>' for wx in WHEELS)
-    tires = "".join(f'<path d="{_ring(wx, WHEEL_Y, 13.5, 9)}" fill-rule="evenodd"/>' for wx in WHEELS)
-    hubs = "".join(f'<circle cx="{wx}" cy="{WHEEL_Y}" r="6.5"/>' for wx in WHEELS)
-    lines = "".join(f'<path d="M{x1},{ly} L{x2},{ly}"/>' for x1, ly, x2 in SPEED)
-    return f'''<g transform="translate({x} {y}) scale({scale}) translate({-MARK_BOX[0]} {-MARK_BOX[1]})">
-<mask id="{uid}" maskUnits="userSpaceOnUse" x="-30" y="0" width="240" height="70">
-<rect x="-30" width="240" height="70" fill="#fff"/>
-<path d="{WINDOW}" fill="#000"/>{arches}{halo}
-</mask>
-<path d="{BODY}" fill="{body}" mask="url(#{uid})"/>
-<g fill="{body}">{tires}</g>
-<g fill="{accent}">{hubs}{_leaf(cx, cy, ln, wd, ang)}</g>
-<g stroke="{accent}" stroke-width="3.2" stroke-linecap="round">{lines}</g>
-</g>'''
+def mark(theme, uid, x=0, y=0, scale=1.0, kind=None):
+    t = THEMES[theme]
+    draw = MARKS[kind or MARK]
+    return (f'<g transform="translate({x} {y}) scale({scale}) translate({-MARK_BOX[0]} {-MARK_BOX[1]})">'
+            f'{draw(t["body"], t["accent"], uid)}</g>')
 
 # ---------------------------------------------------------------- type
 _fonts = {}
@@ -139,45 +102,59 @@ def write(name, w, h, body, bg=None):
         fh.write(svg)
 
 
+def stacked(theme, kind=None, tag=""):
+    pad, ws = 28, 64
+    _, ww, wh = wordmark(theme, "x", 0, 0, ws)
+    ms = ww * 0.40 / MARK_BOX[2]
+    mw, mh = MARK_BOX[2] * ms, MARK_BOX[3] * ms
+    W_ = ww + 2 * pad + ws * 0.15
+    gap = ws * 0.28
+    wm, _, _ = wordmark(theme, f"w-s-{theme}{tag}", pad, pad + mh + gap, ws)
+    return W_, pad + mh + gap + wh + pad, mark(theme, f"m-s-{theme}{tag}", (W_ - mw) / 2, pad, ms, kind) + wm
+
+
 def build():
     os.makedirs(OUT, exist_ok=True)
-    pad = 28
-    ws = 64
+    pad, ws = 28, 64
     for theme in THEMES:
         _, ww, wh = wordmark(theme, "x", 0, 0, ws)
 
-        # stacked (primary): car over the wordmark
-        ms = ww * 0.92 / MARK_BOX[2]
-        mw, mh = MARK_BOX[2] * ms, MARK_BOX[3] * ms
-        W_ = ww + 2 * pad
-        gap = ws * 0.30
-        wm, _, _ = wordmark(theme, f"w-s-{theme}", pad, pad + mh + gap, ws)
-        write(f"doublemint-stacked-{theme}.svg", W_, pad + mh + gap + wh + pad,
-              mark(theme, f"m-s-{theme}", (W_ - mw) / 2 + ww * 0.02, pad, ms) + wm)
+        # stacked (primary): mark over the wordmark
+        w, h, body = stacked(theme)
+        write(f"doublemint-stacked-{theme}.svg", w, h, body)
 
-        # horizontal: car left, wordmark right
-        ms = wh * 1.05 / MARK_BOX[3]
+        # horizontal: mark left, wordmark right
+        ms = wh * 1.35 / MARK_BOX[3]
         mw, mh = MARK_BOX[2] * ms, MARK_BOX[3] * ms
-        tx = pad + mw + ws * 0.45
+        tx = pad + mw + ws * 0.30
         H = max(mh, wh) + 2 * pad
         wm, _, _ = wordmark(theme, f"w-h-{theme}", tx, (H - wh) / 2, ws)
         write(f"doublemint-horizontal-{theme}.svg", tx + ww + pad + ws * 0.1, H,
               mark(theme, f"m-h-{theme}", pad, (H - mh) / 2, ms) + wm)
 
-        # car only
+        # mark only
         ms = 3
         write(f"doublemint-mark-{theme}.svg", MARK_BOX[2] * ms + 2 * pad, MARK_BOX[3] * ms + 2 * pad,
               mark(theme, f"m-m-{theme}", pad, pad, ms))
 
-    # app / social icon: car on gloss black rounded square
+    # app / social icon: mark on gloss black rounded square
     S = 512
-    ms = S * 0.94 / MARK_BOX[2]
-    mw, mh = MARK_BOX[2] * ms, MARK_BOX[3] * ms
-    stripe = (f'<path d="M{S*0.20},{S*0.645} L{S*0.92},{S*0.645} L{S*0.885},{S*0.69} '
-              f'L{S*0.165},{S*0.69}Z" fill="{SPEARMINT}"/>')
-    body = (f'<rect width="{S}" height="{S}" rx="112" fill="{GLOSS}"/>'
-            + mark("dark", "m-icon", (S - mw) / 2 - S * 0.01, S * 0.605 - mh, ms) + stripe)
-    write("doublemint-app-icon.svg", S, S, body)
+    ms = S * 0.70 / MARK_BOX[2]
+    mw = MARK_BOX[2] * ms
+    write("doublemint-app-icon.svg", S, S,
+          f'<rect width="{S}" height="{S}" rx="112" fill="{GLOSS}"/>'
+          + mark("dark", "m-icon", (S - mw) / 2, (S - mw) / 2, ms))
+
+    # options: every mark as a stacked logo, for choosing
+    opt = os.path.join(OUT, "..", "options")
+    os.makedirs(opt, exist_ok=True)
+    for kind in MARKS:
+        for theme in ("dark", "light"):
+            w, h, body = stacked(theme, kind, f"-{kind}")
+            rect = f'<rect width="{w:.1f}" height="{h:.1f}" fill="{GLOSS if theme == "dark" else "#F3F7F0"}"/>'
+            with open(os.path.join(opt, f"option-{kind}-{theme}.svg"), "w") as fh:
+                fh.write(f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w:.1f} {h:.1f}" '
+                         f'width="{w:.0f}" height="{h:.0f}">{rect}{body}</svg>\n')
 
 
 if __name__ == "__main__":
