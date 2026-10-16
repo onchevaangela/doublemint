@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Double Mint price menu (8.5x11)</title>
+<link rel="stylesheet" href="flyer.css">
+<style>
+  @page { size: 8.5in 11in; margin: 0; }
+  .sheet { width: 816px; height: 1056px; padding: 56px 64px 0; }
+  .logo { width: 470px; margin: 0 auto; }
+  .tag { text-align: center; font-size: 14px; margin: 10px 0 40px; }
+  .head { padding-bottom: 14px; border-bottom: 2px solid var(--mint); }
+  .head .cell { width: 128px; font-size: 13px; font-weight: 800; letter-spacing: .2em; }
+  .head h2 { font-size: 26px; }
+  .svc { padding: 26px 0; border-bottom: 1px solid var(--line); }
+  .svc h3 { font-size: 25px; font-weight: 800; font-style: italic; }
+  .svc p { font-size: 14px; color: var(--muted); margin-top: 6px; line-height: 1.45; max-width: 300px; }
+  .svc .cell { width: 128px; }
+  .svc .price { font-size: 48px; }
+  .svc.best h3::after { content: "BEST VALUE"; margin-left: 10px; vertical-align: 4px; font: 800 11px/1 Inter; letter-spacing: .14em; font-style: normal; background: var(--mint); color: var(--ink); padding: 5px 9px; border-radius: 999px; }
+  .addons { display: flex; align-items: center; justify-content: space-between; margin: 30px 0 0; }
+  .addons .eyebrow { font-size: 13px; }
+  .addons .pill { font-size: 19px; padding: 12px 22px; }
+  .addons .pill b { font-style: italic; font-weight: 900; }
+  .foot { margin: auto -64px 0; padding: 30px 64px 40px; background: var(--mint); color: var(--ink); text-align: center; }
+  .foot .k { font-size: 13px; font-weight: 800; letter-spacing: .24em; }
+  .foot .phones { font-size: 40px; margin: 8px 0 10px; white-space: nowrap; }
+  .foot .phones span + span::before { color: var(--ink); }
+  .foot .s { font-size: 14px; font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <img class="logo" src="../assets/img/logo.svg" alt="Double Mint Detailing">
+  <p class="tag eyebrow">Professional hand detailing</p>
+
+  <div class="row head">
+    <h2 class="big">Pricing</h2>
+    <div class="cell">CAR</div><div class="cell">SUV</div><div class="cell">TRUCK</div>
+  </div>
+
+  <div class="row svc">
+    <div><h3>Exterior Cleaning</h3><p>Hand wash, wheels &amp; tires cleaned, tire shine, windows</p></div>
+    <div class="cell price"><sup>$</sup>60</div><div class="cell price"><sup>$</sup>80</div><div class="cell price"><sup>$</sup>100</div>
+  </div>
+  <div class="row svc">
+    <div><h3>Interior Detail</h3><p>Deep vacuum, seats &amp; carpets shampooed, dash &amp; panels, windows, door jambs</p></div>
+    <div class="cell price"><sup>$</sup>200</div><div class="cell price"><sup>$</sup>240</div><div class="cell price"><sup>$</sup>240</div>
+  </div>
+  <div class="row svc best">
+    <div><h3>Inside &amp; Out</h3><p>Complete interior detail plus hand wash &amp; exterior detail, wheels, windows</p></div>
+    <div class="cell price mint"><sup>$</sup>230</div><div class="cell price mint"><sup>$</sup>260</div><div class="cell price mint"><sup>$</sup>280</div>
+  </div>
+
+  <div class="addons">
+    <span class="eyebrow">Add-ons</span>
+    <span class="pill pill-line">Engine Bay Cleaning <b>+$50</b></span>
+    <span class="pill pill-line">Pet Hair Removal <b>+$60</b></span>
+  </div>
+
+  <div class="foot">
+    <div class="k">BOOK ONLINE OR CALL / TEXT</div>
+    <div class="phones"><span>862 238 0550</span><span>219 786 9863</span></div>
+    <div class="s">Appointments recommended &nbsp;·&nbsp; Walk-ins welcome &nbsp;·&nbsp; Eco-friendly products</div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,5 +1,7 @@
 # Doublemint Detailing — Brand Kit
 
+> **The logo changed.** Use the new brush logo in [`new-logo/`](new-logo/). The files below are older concepts.
+
 Open **`brand-guide.html`** in a browser for the full guidelines (logo, color, type, voice, usage).
 
 ## Logo files

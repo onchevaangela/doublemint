@@ -1,0 +1,31 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,500;0,600;0,700;0,800;1,800;1,900&display=swap");
+
+:root { --mint: #3BEA6B; --ink: #0A0D0B; --panel: #141a16; --line: #27302a; --muted: #9AA59E; }
+* { box-sizing: border-box; margin: 0; }
+html, body { background: var(--ink); }
+body { font-family: "Inter", sans-serif; color: #F2F6F3; -webkit-font-smoothing: antialiased; }
+
+.sheet { position: relative; overflow: hidden; background: var(--ink); display: flex; flex-direction: column; }
+.sheet::before { /* soft mint glow */
+  content: ""; position: absolute; width: 120%; aspect-ratio: 1; left: -10%; top: -55%;
+  background: radial-gradient(closest-side, rgba(59, 234, 107, .20), transparent 70%);
+}
+.sheet > * { position: relative; }
+
+.eyebrow { color: var(--mint); font-weight: 700; letter-spacing: .24em; text-transform: uppercase; }
+.big { font-weight: 900; font-style: italic; letter-spacing: -.02em; line-height: 1; }
+.mint { color: var(--mint); }
+.muted { color: var(--muted); }
+.rule { height: 1px; background: var(--line); }
+
+.row { display: grid; grid-template-columns: 1fr auto auto auto; align-items: center; column-gap: 0; }
+.cell { text-align: center; }
+.price { font-weight: 900; font-style: italic; letter-spacing: -.02em; line-height: 1; }
+.price sup { color: var(--mint); font-size: .45em; vertical-align: .9em; margin-right: 1px; }
+
+.pill { display: inline-flex; align-items: center; gap: .5em; border-radius: 999px; font-weight: 800; }
+.pill-mint { background: var(--mint); color: var(--ink); }
+.pill-line { border: 2px solid var(--mint); color: var(--mint); }
+
+.phones { display: flex; justify-content: center; gap: 1.2em; font-weight: 800; font-style: italic; letter-spacing: -.01em; }
+.phones span + span::before { content: "/"; color: var(--mint); margin-right: 1.2em; font-style: normal; }

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Double Mint story / status (1080x1920)</title>
+<link rel="stylesheet" href="flyer.css">
+<style>
+  .sheet { width: 1080px; height: 1920px; padding: 150px 90px 140px; text-align: center; align-items: center; }
+  .sheet::before { top: -25%; }
+  .logo { width: 760px; }
+  h1 { font-size: 150px; margin-top: 110px; }
+  .sub { font-size: 36px; margin-top: 30px; font-weight: 500; }
+  .list { width: 100%; margin-top: 90px; text-align: left; }
+  .list .row { grid-template-columns: 1fr auto; padding: 34px 0; border-bottom: 2px solid var(--line); }
+  .list .row:nth-child(2) { border-top: 2px solid var(--line); }
+  .list h3 { font-size: 46px; font-weight: 800; font-style: italic; }
+  .list small { display: block; font-size: 26px; color: var(--muted); font-weight: 600; margin-top: 4px; }
+  .list .price { font-size: 92px; }
+  .cta { margin-top: auto; font-size: 32px; letter-spacing: .2em; }
+  .phones { flex-direction: column; gap: 6px; font-size: 76px; margin-top: 20px; }
+  .phones span + span::before { content: none; }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <img class="logo" src="../assets/img/logo.svg" alt="Double Mint Detailing">
+  <h1 class="big">Booking<br><span class="mint">now open.</span></h1>
+  <p class="sub muted">Cars · SUVs · Trucks &nbsp;|&nbsp; Walk-ins welcome</p>
+  <div class="list"><p class="eyebrow" style="font-size:24px;margin-bottom:24px">Starting at</p>
+    <div class="row"><div><h3>Exterior</h3><small>Hand wash, wheels, tire shine</small></div><div class="price"><sup>$</sup>60</div></div>
+    <div class="row"><div><h3>Interior</h3><small>Shampoo, vacuum, dash, jambs</small></div><div class="price"><sup>$</sup>200</div></div>
+    <div class="row"><div><h3>Inside &amp; out</h3><small>The full Double Mint detail</small></div><div class="price mint"><sup>$</sup>230</div></div>
+  </div>
+  <div class="cta eyebrow">Call or text to book</div>
+  <div class="phones"><span>862 238 0550</span><span>219 786 9863</span></div>
+</div>
+</body>
+</html>
