@@ -17,7 +17,7 @@ Open **`brand-guide.html`** in a browser for the full guidelines (logo, color, t
 
 ## Classic logo (car swoosh)
 
-`logo/classic/` is a clean vector redraw of the original car + brush-lettering logo: same layout, car, sparkles, with the car outline and lettering traced from `source/original.jpg`, with smooth strokes and solid fills.
+`logo/classic/` is a clean vector redraw of the original car + brush-lettering logo: same layout, car, sparkles, with the lettering traced from `source/original.jpg` and the car rebuilt as smooth strokes along the original's exact path.
 
 | File | Use it for |
 |---|---|
