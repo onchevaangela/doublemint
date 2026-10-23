@@ -1,23 +1,18 @@
 """Generate the classic Double Mint Detailing logo (car swoosh + brush wordmark).
 
 A clean vector redraw of the original artwork: same layout, car silhouette,
-sparkles and text, with smooth tapered strokes and solid fills.
+sparkles and text, with smooth tapered strokes and solid fills. The lettering
+is traced from original.jpg (see trace_text.py), so it keeps the original font.
 
-Requires: pip install fonttools cairosvg
-Fonts (OFL) are in ./fonts: Knewave (wordmark), Montserrat Bold (DETAILING).
-Text is converted to outlines so the SVGs render identically everywhere.
+Requires: pip install cairosvg
 Run: python3 classic.py   (writes ../logo/classic/*.svg and *.png)
 """
 import math
 import os
-from fontTools.ttLib import TTFont
-from fontTools.pens.svgPathPen import SVGPathPen
-from fontTools.pens.transformPen import TransformPen
-from fontTools.pens.boundsPen import BoundsPen
+import json
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-BRUSH = os.path.join(HERE, "fonts", "knewave-latin-400-normal.woff")
-SANS = os.path.join(HERE, "fonts", "montserrat-latin-700-normal.woff")
+TEXT = os.path.join(HERE, "traced_text.json")  # from trace_text.py
 OUT = os.path.join(HERE, "..", "logo", "classic")
 
 MINT = "#2EEB78"        # main green, sampled from the original
@@ -120,70 +115,19 @@ def car():
 
 
 # ------------------------------------------------------------------- text
-class Font:
-    def __init__(self, path):
-        self.tt = TTFont(path)
-        self.gs = self.tt.getGlyphSet()
-        self.cmap = self.tt.getBestCmap()
-        self.upm = self.tt["head"].unitsPerEm
-
-    def glyph(self, ch):
-        return self.gs[self.cmap[ord(ch)]]
-
-    def run(self, text, sx, sy, x, y, tracking=0.0):
-        """Outline `text` at (x, baseline y); returns (path d, bounds)."""
-        pen, bp, cx = SVGPathPen(self.gs), BoundsPen(self.gs), 0.0
-        for ch in text:
-            g = self.glyph(ch)
-            m = (sx, 0, 0, -sy, x + cx, y)
-            g.draw(TransformPen(pen, m))
-            g.draw(TransformPen(bp, m))
-            cx += g.width * sx + tracking
-        return pen.getCommands(), bp.bounds
-
-    def cap_height(self):
-        b = BoundsPen(self.gs)
-        self.glyph("H").draw(b)
-        return b.bounds[3]
-
-
 def wordmark():
-    """DOUBLE / MINT fitted to the original's box, plus DETAILING and rules."""
-    brush = Font(BRUSH)
-    left, right, base, cap = 192, 1048, 300, 116  # original placement
-    sy = cap / brush.cap_height()
-    gap = 34
-    # measure at unit x-scale, then stretch horizontally to fill the box
-    _, b1 = brush.run("DOUBLE", 1, sy, 0, base)
-    _, b2 = brush.run("MINT", 1, sy, 0, base)
-    sx = (right - left - gap) / ((b1[2] - b1[0]) + (b2[2] - b2[0]))
-    sx = min(sx, sy * 1.12)  # keep letter shapes close to the font's own
-    w1 = (b1[2] - b1[0]) * sx
-    w2 = (b2[2] - b2[0]) * sx
-    total = w1 + gap + w2
-    x0 = (left + right - total) / 2
-    double, db = brush.run("DOUBLE", sx, sy, x0 - b1[0] * sx, base)
-    mint, mb = brush.run("MINT", sx, sy, x0 + w1 + gap - b2[0] * sx, base)
-
-    sans = Font(SANS)
-    dcap = 30
-    ds = dcap / sans.cap_height()
-    track = 15.5
-    _, tb = sans.run("DETAILING", ds, ds, 0, 0, track)
-    tw = tb[2] - tb[0]
-    mid = (db[0] + mb[2]) / 2
-    tx = mid - tw / 2 - tb[0]
-    tbase = 344
-    detailing, tbb = sans.run("DETAILING", ds, ds, tx, tbase, track)
-
-    ry, pad = tbase - dcap / 2, 26
-    rules = [(db[0] - 6, tbb[0] - pad), (tbb[2] + pad, mb[2] + 2)]
-    rule_paths = [tapered((a, ry), (a + (b - a) / 3, ry), (b - (b - a) / 3, ry), (b, ry),
-                          (lambda t: 4.2 * min(1, t / 0.06)) if i == 0
-                          else (lambda t: 4.2 * min(1, (1 - t) / 0.06)), n=24)
-                  for i, (a, b) in enumerate(rules)]
-    box = (min(db[0], rules[0][0]), max(mb[2], rules[1][1]), tbb[3])
-    return double, mint, detailing, rule_paths, box
+    """Original lettering (traced by trace_text.py) plus clean divider rules."""
+    with open(TEXT) as fh:
+        t = json.load(fh)
+    db, mb, tb = t["double_box"], t["mint_box"], t["detailing_box"]
+    # rules at the original's position, redrawn with crisp tapered outer ends
+    rules = [(r[0], r[2], (r[1] + r[3]) / 2) for r in t["rules"]]
+    rule_paths = [tapered((a, y), (a + (b - a) / 3, y), (b - (b - a) / 3, y), (b, y),
+                          (lambda u: 5 * min(1, u / 0.06)) if i == 0
+                          else (lambda u: 5 * min(1, (1 - u) / 0.06)), n=24)
+                  for i, (a, b, y) in enumerate(rules)]
+    box = (min(db[0], rules[0][0]), max(mb[2], rules[1][1]), tb[3])
+    return t["double"], t["mint"], t["detailing"], rule_paths, box
 
 
 # -------------------------------------------------------------------- svg
