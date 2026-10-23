@@ -15,6 +15,19 @@ Open **`brand-guide.html`** in a browser for the full guidelines (logo, color, t
 
 `svg/` scales to any size (print, signs, vinyl). `png/` files are high-res with transparent backgrounds (Canva, social media).
 
+## Classic logo (car swoosh)
+
+`logo/classic/` is a clean vector redraw of the original car + brush-lettering logo: same layout, car, sparkles and text, with smooth strokes and solid fills.
+
+| File | Use it for |
+|---|---|
+| `doublemint-classic-dark` | On black, background included (social posts, banners) |
+| `doublemint-classic-transparent` | White + mint, no background: over dark photos, black shirts |
+| `doublemint-classic-light` | Black + green, no background: white paper, invoices |
+| `doublemint-classic-white` / `-black` | One color: vinyl, stamps, embroidery |
+
+Each comes as `.svg` (any size) and a 3000px-wide `.png`. Rebuild with `python3 source/classic.py`.
+
 ## Other mark options
 
 `logo/options/` has the same logo with a **windshield + wiper** or a **steering wheel** instead of the wheel (see `options-comparison.png`). To switch the main files to one of them: `DM_MARK=windshield python3 source/build.py` (or `steering`).
