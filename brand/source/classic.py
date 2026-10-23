@@ -1,8 +1,8 @@
 """Generate the classic Double Mint Detailing logo (car swoosh + brush wordmark).
 
-A clean vector redraw of the original artwork: same layout, car silhouette,
-sparkles and text, with smooth tapered strokes and solid fills. The lettering
-is traced from original.jpg (see trace_text.py), so it keeps the original font.
+A clean vector redraw of the original artwork. The car outline, swooshes and
+lettering are traced from original.jpg (see trace_original.py), so they keep the
+original shapes and font; sparkles and divider rules are redrawn crisply.
 
 Requires: pip install cairosvg
 Run: python3 classic.py   (writes ../logo/classic/*.svg and *.png)
@@ -12,7 +12,7 @@ import os
 import json
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-TEXT = os.path.join(HERE, "traced_text.json")  # from trace_text.py
+TEXT = os.path.join(HERE, "traced.json")  # from trace_original.py
 OUT = os.path.join(HERE, "..", "logo", "classic")
 
 MINT = "#2EEB78"        # main green, sampled from the original
@@ -59,17 +59,6 @@ def tapered(p0, p1, p2, p3, profile, n=90):
     return "M" + " L".join(f"{f(x)} {f(y)}" for x, y in ring) + "Z"
 
 
-def swell(peak, at=0.5, start=0.0, end=0.0, power=1.0):
-    """Width profile rising from `start` to `peak` at t=`at`, falling to `end`."""
-    def p(t):
-        if t <= at:
-            s = math.sin(t / at * math.pi / 2) ** power
-            return start + (peak - start) * s
-        s = math.sin((1 - t) / (1 - at) * math.pi / 2) ** power
-        return end + (peak - end) * s
-    return p
-
-
 def sparkle(cx, cy, rx, ry, k=0.14):
     """Four-point star with concave sides."""
     qx, qy = rx * k, ry * k
@@ -81,30 +70,13 @@ def sparkle(cx, cy, rx, ry, k=0.14):
 
 
 def car():
-    """Return (white_paths, green_paths) for the car silhouette and sparkles."""
-    white = [
-        # roof: thin tail at the back, full in the middle, fine at the nose
-        tapered((404, 113), (498, 60), (704, 50), (808, 119),
-                swell(13, at=0.42, start=1.5, end=4, power=0.8)),
-        # sill / window line back from the nose
-        tapered((808, 119), (722, 145), (566, 137), (438, 115),
-                swell(11, at=0.45, start=4, end=1, power=0.8)),
-    ]
+    """Return (white_paths, green_paths) for the car and sparkles."""
+    with open(TEXT) as fh:
+        t = json.load(fh)
+    # car outline and swooshes traced from the original (trace_original.py)
+    white = [t["car_white"]]
     green = [
-        # window accent (chevron pointing to the nose)
-        tapered((572, 80), (624, 78), (690, 92), (724, 110),
-                swell(7, at=0.85, start=0.6, end=5.5)),
-        tapered((724, 110), (700, 118), (672, 122), (630, 123),
-                swell(5.5, at=0.15, start=5.5, end=0.6)),
-        # body swoosh, rear to door
-        tapered((228, 163), (312, 127), (476, 116), (664, 150),
-                swell(20, at=0.38, start=0.4, end=0.8, power=0.9)),
-        # fine streak under the body swoosh
-        tapered((470, 141), (540, 148), (606, 152), (654, 153),
-                swell(4, at=0.5, start=0.3, end=0.3)),
-        # body swoosh, door to front wheel arch
-        tapered((660, 159), (744, 122), (868, 117), (946, 167),
-                swell(17, at=0.45, start=0.6, end=0.4, power=0.9)),
+        t["car_green"],
         # sparkles
         sparkle(812, 70, 23, 31),
         sparkle(853, 96, 11, 14),
@@ -116,7 +88,7 @@ def car():
 
 # ------------------------------------------------------------------- text
 def wordmark():
-    """Original lettering (traced by trace_text.py) plus clean divider rules."""
+    """Original lettering (traced) plus clean divider rules."""
     with open(TEXT) as fh:
         t = json.load(fh)
     db, mb, tb = t["double_box"], t["mint_box"], t["detailing_box"]

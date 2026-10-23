@@ -17,7 +17,7 @@ Open **`brand-guide.html`** in a browser for the full guidelines (logo, color, t
 
 ## Classic logo (car swoosh)
 
-`logo/classic/` is a clean vector redraw of the original car + brush-lettering logo: same layout, car, sparkles, and the original lettering traced from `source/original.jpg`, with smooth strokes and solid fills.
+`logo/classic/` is a clean vector redraw of the original car + brush-lettering logo: same layout, car, sparkles, with the car outline and lettering traced from `source/original.jpg`, with smooth strokes and solid fills.
 
 | File | Use it for |
 |---|---|
@@ -26,7 +26,7 @@ Open **`brand-guide.html`** in a browser for the full guidelines (logo, color, t
 | `doublemint-classic-light` | Black + green, no background: white paper, invoices |
 | `doublemint-classic-white` / `-black` | One color: vinyl, stamps, embroidery |
 
-Each comes as `.svg` (any size) and a 3000px-wide `.png`. Rebuild with `python3 source/trace_text.py` (re-traces the lettering) then `python3 source/classic.py`.
+Each comes as `.svg` (any size) and a 3000px-wide `.png`. Rebuild with `python3 source/trace_original.py` (re-traces car + lettering) then `python3 source/classic.py`.
 
 ## Other mark options
 

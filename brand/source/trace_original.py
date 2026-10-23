@@ -1,10 +1,10 @@
-"""Trace the original lettering into clean vector outlines.
+"""Trace the original lettering and car into clean vector outlines.
 
-Keeps the exact letter shapes of the original logo (DOUBLE MINT brush type and
-DETAILING) while smoothing away the JPEG noise and dry-brush grain.
+Keeps the exact shapes of the original logo (car outline and swooshes, DOUBLE
+MINT brush type and DETAILING) while smoothing away JPEG noise and brush grain.
 
 Requires: pip install numpy pillow scipy potracer
-Run: python3 trace_text.py   (reads original.jpg, writes traced_text.json)
+Run: python3 trace_original.py   (reads original.jpg, writes traced.json)
 """
 import json
 import os
@@ -15,9 +15,9 @@ from scipy import ndimage
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SRC = os.path.join(HERE, "original.jpg")
-OUT = os.path.join(HERE, "traced_text.json")
+OUT = os.path.join(HERE, "traced.json")
 
-X0, Y0, X1, Y1 = 140, 150, 1080, 360  # text area in original pixels
+X0, Y0, X1, Y1 = 140, 40, 1080, 360   # logo area in original pixels
 SCALE = 8                             # trace at 8x for smooth curves
 
 
@@ -57,8 +57,9 @@ def keep(mask, test):
 
 
 def trace(mask, alphamax):
-    curves = potrace.Bitmap(~mask).trace(  # potracer: False = inkturdsize=40 * SCALE, alphamax=alphamax,
-                                        opttolerance=0.4)
+    # potracer treats False as ink, hence ~mask
+    curves = potrace.Bitmap(~mask).trace(turdsize=40 * SCALE, alphamax=alphamax,
+                                         opttolerance=0.4)
     k = 1 / SCALE
 
     def p(pt):
@@ -87,15 +88,21 @@ if __name__ == "__main__":
     big = lambda y0, y1, x0, x1: y1 > 200 and y0 < 300   # wordmark, not car
     small = lambda y0, y1, x0, x1: y0 > 300 and 340 < x0 and x1 < 880
     rule = lambda y0, y1, x0, x1: y0 > 300 and (x1 < 345 or x0 > 870)
+    # car: above the wordmark, right of the ceiling light, minus the sparkles
+    body = lambda y0, y1, x0, x1: y1 < 180 and x0 > 215 and not (x0 > 750 and y1 < 112)
 
     double = keep(solid(white, 1.2 * SCALE, 2 * SCALE), big)
     mint = keep(solid(green, 1.2 * SCALE, 2 * SCALE), big)
     detailing = keep(solid(white, 0.35 * SCALE, 0), small)
     rules = keep(solid(green, 0.5 * SCALE, 0), rule)
+    car_white = keep(solid(white, 0.7 * SCALE, SCALE), body)
+    car_green = keep(solid(green, 0.7 * SCALE, SCALE), body)
 
     lab, _ = ndimage.label(rules)
     rule_boxes = sorted(bounds(lab == i) for i in range(1, lab.max() + 1))
     data = {
+        "car_white": trace(car_white, 1.1),
+        "car_green": trace(car_green, 1.1),
         "double": trace(double, 1.0),
         "mint": trace(mint, 1.0),
         "detailing": trace(detailing, 0.55),
