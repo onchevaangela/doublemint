@@ -68,7 +68,7 @@ h2 { font-size: clamp(32px, 5vw, 48px); }
   border-bottom: 1px solid var(--line);
 }
 .topbar-inner { display: flex; align-items: center; gap: 24px; height: 68px; }
-.brand img { height: 50px; width: auto; }
+.brand img { height: 52px; width: auto; }
 .nav { display: flex; gap: 28px; margin-left: auto; }
 .nav a { text-decoration: none; color: var(--muted); font-weight: 600; font-size: 15px; }
 .nav a:hover { color: var(--text); }

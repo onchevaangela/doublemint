@@ -1,6 +1,6 @@
 # Doublemint Detailing — Brand Kit
 
-> **The logo changed.** Use the new brush logo in [`new-logo/`](new-logo/). The files below are older concepts.
+> **The logo changed.** The official logo files are in [`logo-official/`](logo-official/). Everything below is an older concept and should not be used.
 
 Open **`brand-guide.html`** in a browser for the full guidelines (logo, color, type, voice, usage).
 
