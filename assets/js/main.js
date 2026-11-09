@@ -55,7 +55,7 @@
   $("[data-addons]").innerHTML = C.addons.map((a) => `
     <div class="addon">
       <div class="ico"><svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[a.id] || ""}</svg></div>
-      <div><h3>${esc(a.name)}</h3><p>Add to any detail</p></div>
+      <div><h3>${esc(a.name)}</h3><p>${esc(a.desc)}</p></div>
       <div class="amt">+${money(a.price)}</div>
     </div>`).join("");
 
@@ -187,7 +187,7 @@
   }
 
   $("[data-mode-note]").textContent = C.bookingEndpoint
-    ? "You'll get a calendar confirmation by email. Pay after the job."
+    ? "We'll email you right away, then again once we confirm your time. Pay after the job."
     : "This opens a pre-filled text to us. We'll confirm your time.";
 
   const msg = $("[data-msg]");
@@ -202,11 +202,13 @@
       el.setAttribute("aria-invalid", String(invalid));
       if (invalid && !bad) bad = el;
     });
+    // online booking confirms by email, so it's required there; the text-message fallback doesn't need it
     const email = form.elements.email;
-    if (email.value && !email.checkValidity()) { email.setAttribute("aria-invalid", "true"); bad = bad || email; }
-    else email.setAttribute("aria-invalid", "false");
+    const emailBad = C.bookingEndpoint ? !email.value.trim() || !email.checkValidity() : !!email.value && !email.checkValidity();
+    email.setAttribute("aria-invalid", String(emailBad));
+    if (emailBad && !bad) bad = email;
     if (!state.time) return fail("Please pick a date and time.");
-    if (bad) { bad.focus(); return fail("Please add your name and phone number."); }
+    if (bad) { bad.focus(); return fail(C.bookingEndpoint ? "Please add your name, phone and email." : "Please add your name and phone number."); }
 
     const booking = {
       service: service().name,
@@ -227,13 +229,13 @@
 
     const btn = $("[data-submit]");
     btn.disabled = true;
-    btn.textContent = "Booking…";
+    btn.textContent = "Sending…";
     try {
       // text/plain keeps this a "simple" request, which Apps Script accepts cross-origin
       const res = await (await fetch(C.bookingEndpoint, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(booking) })).json();
       if (!res.ok) throw new Error(res.error || "Booking failed");
       msg.className = "form-msg ok";
-      msg.textContent = `You're booked for ${fmtDate(booking.date)} at ${fmtTime(booking.time)}. See you then!`;
+      msg.textContent = `Request sent for ${fmtDate(booking.date)} at ${fmtTime(booking.time)}! Check your email. We'll confirm your appointment shortly.`;
       ["name", "phone", "email", "vehicle", "notes"].forEach((n) => { form.elements[n].value = ""; });
       state.time = null;
       loadSlots();
@@ -242,7 +244,7 @@
       if (err.message === "slot_taken") loadSlots();
     } finally {
       btn.disabled = false;
-      btn.textContent = "Request booking";
+      btn.textContent = "Request appointment";
     }
   });
 

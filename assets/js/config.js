@@ -42,8 +42,10 @@ window.DM_CONFIG = {
   ],
 
   addons: [
-    { id: "engine", name: "Engine Bay Cleaning", price: 50, minutes: 30 },
-    { id: "pet", name: "Pet Hair Removal", price: 60, minutes: 45 },
+    { id: "engine", name: "Engine Bay Cleaning", price: 50, minutes: 30,
+      desc: "Degreased, detailed and dressed so your engine bay looks showroom clean." },
+    { id: "pet", name: "Pet Hair Removal", price: 60, minutes: 45,
+      desc: "Professional removal of stubborn dog and cat hair from seats, carpets and mats." },
   ],
 
   // Shown in the date picker; the Apps Script has its own copy that is the source of truth.
